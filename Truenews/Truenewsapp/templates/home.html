@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Новости</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <style>
+        .news-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-dark text-white">
+
+<header class="p-3 text-bg-dark">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <a href="/" class="text-white text-decoration-none fs-4">TrueNews | Правдивые новости</a>
+
+            <ul class="nav">
+                <li><a href="/" class="nav-link text-white">Главная</a></li>
+            </ul>
+
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                <input type="search" class="form-control bg-dark text-white border-light" placeholder="Поиск..." aria-label="Search">
+            </form>
+
+            <div class="text-end">
+                <button type="button" class="btn btn-outline-light me-2">Войти</button>
+                <button type="button" class="btn btn-warning">Регистрация</button>
+            </div>
+        </div>
+    </div>
+    <hr class="text-white">
+</header>
+
+<div class="container d-flex">
+    <!-- Боковая панель с категориями -->
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-dark text-white" style="width: 280px;">
+        <h4>Категории</h4>
+        <hr>
+        <ul class="nav nav-pills flex-column">
+            {% for c in categories %}
+            <li class="nav-item">
+                <a href="/category/{{ c.id }}" class="nav-link text-white">{{ c.name }}</a>
+            </li>
+            {% empty %}
+            <li class="nav-item text-white">Категорий пока нет.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container px-4 py-5">
+        <h2 class="pb-2 border-bottom">Последние новости</h2>
+        <div class="row g-4 py-5 row-cols-1 row-cols-lg-2">
+            {% for news_item in news %}
+            <div class="col">
+                <div class="card bg-dark text-white border-light">
+                    {% if news_item.photo %}
+                    <img src="{{ news_item.photo.url }}" class="card-img-top news-img" alt="{{ news_item.title }}">
+                    {% else %}
+                    <img src="https://via.placeholder.com/300x200?text=Нет+изображения" class="card-img-top news-img" alt="Нет изображения">
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 class="card-title">{{ news_item.title }}</h3>
+                        <p class="card-text">{{ news_item.content|truncatewords:30 }}</p>
+                        <small class="text-muted">Автор: {{ news_item.author }}</small>
+                        <br>
+                        <small class="text-muted">Категория: {{ news_item.category }}</small>
+                        <br>
+                        <a href="/news/{{ news_item.id }}" class="btn btn-outline-light mt-3">Читать далее</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>Новостей пока нет.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
